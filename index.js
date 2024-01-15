@@ -24,6 +24,7 @@ hexo.extend.filter.register("server_middleware", async (app) => {
 
     const onProcessAfter = function(event) {
         if (event.type === "skip") return;
+        if (resCollection.size === 0) return;
 
         const ext = extname(event.path);
         const output = hexo.extend.renderer.getOutput(event.path);
