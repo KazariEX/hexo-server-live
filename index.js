@@ -1,5 +1,5 @@
 hexo.extend.filter.register("server_middleware", async (app) => {
-    const path = require("path");
+    const { basename, extname } = require("path");
     const log = require("hexo-log").default({
         debug: false,
         silent: false
@@ -7,6 +7,13 @@ hexo.extend.filter.register("server_middleware", async (app) => {
 
     const route = "/live-reload";
     const eventName = "change";
+    const styleExts = [
+        "css",
+        "less",
+        "sass",
+        "scss",
+        "styl"
+    ];
     const {
         delay = 150
     } = hexo.config.live_reload ?? {};
@@ -25,6 +32,15 @@ hexo.extend.filter.register("server_middleware", async (app) => {
     hexo.source.on("processAfter", (event) => {
         if (event.type === "skip") return;
 
+        const ext = extname(event.path);
+        let path = "/" + event.path;
+        let type = "other";
+
+        if (styleExts.includes(ext.slice(1))) {
+            path = path.replace(new RegExp(`${ext}$`), ".css");
+            type = "style";
+        }
+
         log.info("Refreshing browser due to changes...");
         setTimeout(() => {
             for (const res of resCollection) {
@@ -34,8 +50,8 @@ hexo.extend.filter.register("server_middleware", async (app) => {
                 else {
                     res.write(`event: ${eventName}\n`);
                     res.write(`data: ${JSON.stringify({
-                        ext: path.extname(event.path),
-                        path: event.path
+                        path,
+                        type
                     })}\n\n`);
                 }
             }
@@ -43,33 +59,31 @@ hexo.extend.filter.register("server_middleware", async (app) => {
     });
 
     hexo.extend.injector.register("body_end", /*HTML*/`
-        <script type="module">
-            const es = new EventSource("${route}");
-            es.addEventListener("${eventName}", (event) => {
-                const data = JSON.parse(event.data);
-                const path = "/" + data.path;
+    <script type="module">
+        const es = new EventSource("${route}");
+        es.addEventListener("${eventName}", (event) => {
+            const data = JSON.parse(event.data);
 
-                if (data.ext === ".css") {
-                    const links = document.querySelectorAll("link");
-                    for (const link of links) {
-                        const url = new URL(link.href);
-                        if (url.host === location.host && url.pathname === path) {
-                            const next = link.cloneNode();
-                            next.href = path + "?" + Math.random().toString(36).slice(2);
-                            next.onload = () => link.remove();
-                            link.parentNode.insertBefore(next, link.nextSibling);
-                            return;
-                        }
+            if (data.type === "style") {
+                const links = document.querySelectorAll("link");
+                for (const link of links) {
+                    const url = new URL(link.href);
+                    if (url.host === location.host && url.pathname === data.path) {
+                        const next = link.cloneNode();
+                        next.href = data.path + "?" + Math.random().toString(36).slice(2);
+                        next.onload = () => link.remove();
+                        link.parentNode.insertBefore(next, link.nextSibling);
+                        return;
                     }
                 }
-                
-                if ("pjax" in window) {
-                    pjax.loadUrl(location.href, { history: false });
-                }
-                else {
-                    location.reload();
-                }
-            });
-        </script>
-    `);
+            }
+            
+            if ("pjax" in window) {
+                pjax.loadUrl(location.href, { history: false });
+            }
+            else {
+                location.reload();
+            }
+        });
+    </script>`);
 });
