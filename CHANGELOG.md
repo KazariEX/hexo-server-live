@@ -1,3 +1,8 @@
+## v0.2.0 (2024-01-16)
+
+- Feature: hot-reloading for CSS.
+- Chore: rename to hexo-server-live.
+
 ## v0.1.1 (2024-01-16)
 
 - Fix: no history with pjax.
