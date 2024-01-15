@@ -53,6 +53,7 @@ hexo.extend.filter.register("server_middleware", async (app) => {
     }
 
     hexo.source.on("processAfter", onProcessAfter);
+    hexo.theme.on("processAfter", onProcessAfter);
 
     hexo.extend.injector.register("body_end", /*HTML*/`
     <script type="module">
