@@ -7,13 +7,6 @@ hexo.extend.filter.register("server_middleware", async (app) => {
 
     const route = "/live-reload";
     const eventName = "change";
-    const styleExts = [
-        "css",
-        "less",
-        "sass",
-        "scss",
-        "styl"
-    ];
     const {
         delay = 150
     } = hexo.config.live_reload ?? {};
@@ -29,19 +22,20 @@ hexo.extend.filter.register("server_middleware", async (app) => {
         resCollection.add(res);
     });
 
-    hexo.source.on("processAfter", (event) => {
+    const onProcessAfter = function(event) {
         if (event.type === "skip") return;
 
         const ext = extname(event.path);
-        let path = "/" + event.path;
+        const output = hexo.extend.renderer.getOutput(event.path);
+        let path = "/" + event.path.replace(/^source\//, "");
         let type = "other";
 
-        if (styleExts.includes(ext.slice(1))) {
-            path = path.replace(new RegExp(`${ext}$`), ".css");
+        if (output === "css") {
+            path = path.replace(ext, ".css");
             type = "style";
         }
 
-        log.info("Refreshing browser due to changes...");
+        log.info("Reloading due to changes...");
         setTimeout(() => {
             for (const res of resCollection) {
                 if (res.closed) {
@@ -56,7 +50,9 @@ hexo.extend.filter.register("server_middleware", async (app) => {
                 }
             }
         }, delay);
-    });
+    }
+
+    hexo.source.on("processAfter", onProcessAfter);
 
     hexo.extend.injector.register("body_end", /*HTML*/`
     <script type="module">
