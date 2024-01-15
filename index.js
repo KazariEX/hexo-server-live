@@ -44,7 +44,7 @@ hexo.extend.filter.register("server_middleware", async (app) => {
             es.addEventListener("${eventName}", () => {
                 setTimeout(() => {
                     if ("pjax" in window) {
-                        pjax.loadUrl(location.href);
+                        pjax.loadUrl(location.href, { history: false });
                     }
                     else {
                         location.reload();
