@@ -1,18 +1,20 @@
 {
-  "name": "hexo-auto-refresh",
+  "name": "hexo-server-live",
   "version": "0.1.1",
-  "description": "Auto refresh browser while source file changed for Hexo.",
+  "description": "Live reload while source file changed for Hexo.",
   "main": "index",
   "keywords": [
     "hexo",
-    "refresh"
+    "server",
+    "live",
+    "reload"
   ],
   "author": {
     "name": "KazariEX",
     "url": "https://bikariarchive.xyz"
   },
-  "repository": "KazariEX/hexo-auto-refresh",
-  "homepage": "https://github.com/KazariEX/hexo-auto-refresh",
+  "repository": "KazariEX/hexo-server-live",
+  "homepage": "https://github.com/KazariEX/hexo-server-live",
   "license": "MIT",
   "devDependencies": {
     "hexo-log": "^4.1.0"

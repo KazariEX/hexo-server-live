@@ -1,13 +1,13 @@
-# hexo-auto-refresh
+# hexo-server-live
 
-[![NPM version](https://badge.fury.io/js/hexo-auto-refresh.svg)](https://www.npmjs.com/package/hexo-auto-refresh)
+[![NPM version](https://badge.fury.io/js/hexo-server-live.svg)](https://www.npmjs.com/package/hexo-server-live)
 
-Auto refresh browser while source file changed for [Hexo].
+Live reload while source file changed for [Hexo].
 
 ## Installation
 
 ```bash
-$ npm i -D hexo-auto-refresh
+$ npm i -D hexo-server-live
 ```
 
 ## Usage
@@ -19,11 +19,11 @@ $ hexo server
 ## Options
 
 ```yaml
-auto_refresh:
+live_reload:
     delay: 150
 ```
 
-- **delay**: Refresh delay after file updates
+- **delay**: Reload delay after file updates
 
 ## License
 

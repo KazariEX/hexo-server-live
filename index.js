@@ -1,16 +1,15 @@
 hexo.extend.filter.register("server_middleware", async (app) => {
     const path = require("path");
-    const pkg = require("./package.json");
     const log = require("hexo-log").default({
         debug: false,
         silent: false
     });
 
-    const route = "/auto-refresh";
+    const route = "/live-reload";
     const eventName = "change";
     const {
         delay = 150
-    } = hexo.config.auto_refresh ?? {};
+    } = hexo.config.live_reload ?? {};
 
     const resCollection = new Set();
 
