@@ -20,11 +20,9 @@ $ hexo server
 
 ```yaml
 auto_refresh:
-    port: 7070
     delay: 150
 ```
 
-- **port**: Server port
 - **delay**: Refresh delay after file updates
 
 ## License

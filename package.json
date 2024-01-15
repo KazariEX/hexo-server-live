@@ -15,11 +15,6 @@
   "homepage": "https://github.com/KazariEX/hexo-auto-refresh",
   "license": "MIT",
   "devDependencies": {
-    "chokidar": "^3.5.3",
-    "express": "^4.18.2",
-    "hexo-fs": "^4.1.1",
-    "hexo-log": "^4.1.0",
-    "picocolors": "^1.0.0",
-    "portfinder": "^1.0.32"
+    "hexo-log": "^4.1.0"
   }
 }
