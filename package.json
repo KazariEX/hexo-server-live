@@ -1,0 +1,25 @@
+{
+  "name": "hexo-auto-refresh",
+  "version": "0.0.1",
+  "description": "Auto refresh browser while source file changed for Hexo.",
+  "main": "index",
+  "keywords": [
+    "hexo",
+    "refresh"
+  ],
+  "author": {
+    "name": "KazariEX",
+    "url": "https://bikariarchive.xyz"
+  },
+  "repository": "KazariEX/hexo-auto-refresh",
+  "homepage": "https://github.com/KazariEX/hexo-auto-refresh",
+  "license": "MIT",
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "express": "^4.18.2",
+    "hexo-fs": "^4.1.1",
+    "hexo-log": "^4.1.0",
+    "picocolors": "^1.0.0",
+    "portfinder": "^1.0.32"
+  }
+}
