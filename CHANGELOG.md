@@ -1,3 +1,9 @@
+## v0.2.2 (2024-01-16)
+
+- Feature: listen to the theme folder.
+- Improvement: check styles output extname by hexo renderer.
+- Pref: do nothing when the files are first created.
+
 ## v0.2.1 (2024-01-16)
 
 - Feature: support CSS preprocessor.
