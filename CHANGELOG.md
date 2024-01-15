@@ -1,3 +1,7 @@
+## v0.2.1 (2024-01-16)
+
+- Feature: support CSS preprocessor.
+
 ## v0.2.0 (2024-01-16)
 
 - Feature: hot-reloading for CSS.
