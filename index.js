@@ -1,4 +1,5 @@
 hexo.extend.filter.register("server_middleware", async (app) => {
+    const path = require("path");
     const pkg = require("./package.json");
     const log = require("hexo-log").default({
         debug: false,
@@ -26,31 +27,50 @@ hexo.extend.filter.register("server_middleware", async (app) => {
         if (event.type === "skip") return;
 
         log.info("Refreshing browser due to changes...");
-        for (const res of resCollection) {
-            if (res.closed) {
-                resCollection.delete(res);
+        setTimeout(() => {
+            for (const res of resCollection) {
+                if (res.closed) {
+                    resCollection.delete(res);
+                }
+                else {
+                    res.write(`event: ${eventName}\n`);
+                    res.write(`data: ${JSON.stringify({
+                        ext: path.extname(event.path),
+                        path: event.path
+                    })}\n\n`);
+                }
             }
-            else {
-                res.write(`event: ${eventName}\n`);
-                res.write("data: \n\n");
-            }
-        }
+        }, delay);
     });
 
-    hexo.extend.injector.register("body_end", () => {
-        return /*HTML*/`
+    hexo.extend.injector.register("body_end", /*HTML*/`
         <script type="module">
             const es = new EventSource("${route}");
-            es.addEventListener("${eventName}", () => {
-                setTimeout(() => {
-                    if ("pjax" in window) {
-                        pjax.loadUrl(location.href, { history: false });
+            es.addEventListener("${eventName}", (event) => {
+                const data = JSON.parse(event.data);
+                const path = "/" + data.path;
+
+                if (data.ext === ".css") {
+                    const links = document.querySelectorAll("link");
+                    for (const link of links) {
+                        const url = new URL(link.href);
+                        if (url.host === location.host && url.pathname === path) {
+                            const next = link.cloneNode();
+                            next.href = path + "?" + Math.random().toString(36).slice(2);
+                            next.onload = () => link.remove();
+                            link.parentNode.insertBefore(next, link.nextSibling);
+                            return;
+                        }
                     }
-                    else {
-                        location.reload();
-                    }
-                }, ${delay});
+                }
+                
+                if ("pjax" in window) {
+                    pjax.loadUrl(location.href, { history: false });
+                }
+                else {
+                    location.reload();
+                }
             });
         </script>
-    `;});
+    `);
 });
