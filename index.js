@@ -10,9 +10,9 @@ hexo.env.cmd === "server" && (async () => {
         silent: false
     });
 
+    const host = "localhost";
     const route = "/auto-refresh";
     const {
-        host = "localhost",
         port: default_port = 7070,
         delay = 100
     } = hexo.config.auto_refresh ?? {};
@@ -53,7 +53,7 @@ hexo.env.cmd === "server" && (async () => {
 
     hexo.extend.injector.register("body_end", () => {
         return /*HTML*/`
-        <script>
+        <script type="module">
             const es = new EventSource("http://${host}:${port}${route}");
             es.addEventListener("change", (event) => {
                 location.reload();

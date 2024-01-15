@@ -1,6 +1,6 @@
 {
   "name": "hexo-auto-refresh",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Auto refresh browser while source file changed for Hexo.",
   "main": "index",
   "keywords": [
