@@ -12,9 +12,10 @@ hexo.env.cmd === "server" && (async () => {
 
     const host = "localhost";
     const route = "/auto-refresh";
+    const eventName = "change";
     const {
         port: default_port = 7070,
-        delay = 100
+        delay = 150
     } = hexo.config.auto_refresh ?? {};
 
     const app = express();
@@ -44,7 +45,7 @@ hexo.env.cmd === "server" && (async () => {
                     resSet.delete(res);
                 }
                 else {
-                    res.write("event: change\n");
+                    res.write(`event: ${eventName}\n`);
                     res.write("data: \n\n");
                 }
             }
@@ -55,8 +56,13 @@ hexo.env.cmd === "server" && (async () => {
         return /*HTML*/`
         <script type="module">
             const es = new EventSource("http://${host}:${port}${route}");
-            es.addEventListener("change", (event) => {
-                location.reload();
+            es.addEventListener("${eventName}", (event) => {
+                if ("pjax" in window) {
+                    pjax.loadUrl(location.href);
+                }
+                else {
+                    location.reload();
+                }
             });
         </script>
     `;});

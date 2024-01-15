@@ -21,7 +21,7 @@ $ hexo server
 ```yaml
 auto_refresh:
     port: 7070
-    delay: 100
+    delay: 150
 ```
 
 - **port**: Server port
