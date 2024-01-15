@@ -1,3 +1,7 @@
+## v0.1.1 (2024-01-16)
+
+- Fix: no history with pjax.
+
 ## v0.1.0 (2024-01-16)
 
 - Improvement: use filter ``server_middleware`` provided by hexo-server, instead of custom server.
