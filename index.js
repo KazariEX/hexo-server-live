@@ -1,8 +1,13 @@
 hexo.extend.filter.register("server_middleware", async (app) => {
     const { basename, extname } = require("path");
-    const createLog = require("hexo-log");
+    const pkg = require("./package.json");
+
+    const createLog = ((fn) => {
+        return (typeof fn === "function") ? fn : fn.default;
+    })(require("hexo-log"));
+
     const log = createLog({
-        name: "live-reload",
+        name: pkg.name,
         debug: false,
         silent: false
     });
