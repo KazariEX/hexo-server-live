@@ -21,9 +21,11 @@ $ hexo server
 ```yaml
 live_reload:
     delay: 150
+    info: true
 ```
 
 - **delay**: Reload delay after file updates
+- **info**: Whether to print information when file updates
 
 ## License
 
