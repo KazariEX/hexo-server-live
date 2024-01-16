@@ -1,3 +1,7 @@
+## v0.2.4 (2024-01-16)
+
+- Fix: auto reconnect SSE when server disconnects ([#1](https://github.com/KazariEX/hexo-server-live/pull/1)).
+
 ## v0.2.3 (2024-01-16)
 
 - Feature: expose the option of whether to print reload info.

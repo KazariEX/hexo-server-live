@@ -22,10 +22,12 @@ $ hexo server
 live_reload:
     delay: 150
     info: true
+    retry: 3000
 ```
 
 - **delay**: Reload delay after file updates
 - **info**: Whether to print information when file updates
+- **retry**: Delay for retrying to connect SSE
 
 ## License
 
