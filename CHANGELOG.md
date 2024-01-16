@@ -1,3 +1,7 @@
+## v0.2.6 (2024-01-16)
+
+- Fix: close SSE when onerror.
+
 ## v0.2.5 (2024-01-16)
 
 - Fix: require hexo-log.
