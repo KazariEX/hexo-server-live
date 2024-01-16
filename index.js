@@ -1,6 +1,8 @@
 hexo.extend.filter.register("server_middleware", async (app) => {
     const { basename, extname } = require("path");
-    const log = require("hexo-log").default({
+    const createLog = require("hexo-log");
+    const log = createLog({
+        name: "live-reload",
         debug: false,
         silent: false
     });
@@ -9,7 +11,8 @@ hexo.extend.filter.register("server_middleware", async (app) => {
     const eventName = "change";
     const {
         delay = 150,
-        info = true
+        info = true,
+        retry = 3000
     } = hexo.config.live_reload ?? {};
 
     const resCollection = new Set();
@@ -23,7 +26,7 @@ hexo.extend.filter.register("server_middleware", async (app) => {
         resCollection.add(res);
     });
 
-    const onProcessAfter = function(event) {
+    const onProcessAfter = function (event) {
         if (event.type === "skip") return;
         if (resCollection.size === 0) return;
 
@@ -64,30 +67,42 @@ hexo.extend.filter.register("server_middleware", async (app) => {
 
     hexo.extend.injector.register("body_end", /*HTML*/`
     <script type="module">
-        const es = new EventSource("${route}");
-        es.addEventListener("${eventName}", (event) => {
+        let es = null;
+        function initES() {
+        es?.close();
+        if (es == null || es.readyState == 2) {
+            es = new EventSource("${route}");
+            es.onerror = function (e) {
+            if (es.readyState == 2) {
+                setTimeout(initES, ${retry});
+            }
+            };
+            es.addEventListener("${eventName}", (event) => {
             const data = JSON.parse(event.data);
 
             if (data.type === "style") {
                 const links = document.querySelectorAll("link");
                 for (const link of links) {
-                    const url = new URL(link.href);
-                    if (url.host === location.host && url.pathname === data.path) {
-                        const next = link.cloneNode();
-                        next.href = data.path + "?" + Math.random().toString(36).slice(2);
-                        next.onload = () => link.remove();
-                        link.parentNode.insertBefore(next, link.nextSibling);
-                        return;
-                    }
+                const url = new URL(link.href);
+                if (url.host === location.host && url.pathname === data.path) {
+                    const next = link.cloneNode();
+                    next.href = data.path + "?" + Math.random().toString(36).slice(2);
+                    next.onload = () => link.remove();
+                    link.parentNode.insertBefore(next, link.nextSibling);
+                    return;
+                }
                 }
             }
 
-            if ("pjax" in window && data.type === "other") {
+            if ("pjax" in window) {
                 pjax.loadUrl(location.href, { history: false });
             }
             else {
                 location.reload();
             }
-        });
+            });
+        }
+        }
+        initES();
     </script>`);
 });
