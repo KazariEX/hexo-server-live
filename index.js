@@ -15,12 +15,13 @@ hexo.extend.filter.register("server_middleware", async (app) => {
     const route = "/live-reload";
     const eventName = "change";
     const {
-        delay = 150,
+        delay = 0,
         info = true,
         retry = 3000
     } = hexo.config.live_reload ?? {};
 
     const resCollection = new Set();
+    let message = "";
 
     app.use(route, (req, res) => {
         res.writeHead(200, {
@@ -51,24 +52,27 @@ hexo.extend.filter.register("server_middleware", async (app) => {
         }
 
         info && log.info("Reloading due to changes...");
-        setTimeout(() => {
-            for (const res of resCollection) {
-                if (res.closed) {
-                    resCollection.delete(res);
-                }
-                else {
-                    res.write(`event: ${eventName}\n`);
-                    res.write(`data: ${JSON.stringify({
-                        path,
-                        type
-                    })}\n\n`);
-                }
-            }
-        }, delay);
+        message = 
+            `event: ${eventName}\n` +
+            `data: ${JSON.stringify({
+                path,
+                type
+            })}\n\n`;
     }
 
     hexo.source.on("processAfter", onProcessAfter);
     hexo.theme.on("processAfter", onProcessAfter);
+
+    hexo.on("generateAfter", () => {
+        setTimeout(() => resCollection.forEach((res) => {
+            if (res.closed) {
+                resCollection.delete(res);
+            }
+            else {
+                res.write(message);
+            }
+        }), delay);
+    });
 
     hexo.extend.injector.register("body_end", `<script type="module">
         (${
