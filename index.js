@@ -8,7 +8,8 @@ hexo.extend.filter.register("server_middleware", async (app) => {
     const route = "/live-reload";
     const eventName = "change";
     const {
-        delay = 150
+        delay = 150,
+        info = true
     } = hexo.config.live_reload ?? {};
 
     const resCollection = new Set();
@@ -36,7 +37,7 @@ hexo.extend.filter.register("server_middleware", async (app) => {
             type = "style";
         }
 
-        log.info("Reloading due to changes...");
+        info && log.info("Reloading due to changes...");
         setTimeout(() => {
             for (const res of resCollection) {
                 if (res.closed) {
