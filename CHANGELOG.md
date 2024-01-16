@@ -1,3 +1,8 @@
+## v0.2.5 (2024-01-16)
+
+- Fix: require hexo-log.
+- Refactor: move the injection script into a separate file.
+
 ## v0.2.4 (2024-01-16)
 
 - Fix: auto reconnect SSE when server disconnects ([#1](https://github.com/KazariEX/hexo-server-live/pull/1)).
