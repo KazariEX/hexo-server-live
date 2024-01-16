@@ -32,9 +32,14 @@ hexo.extend.filter.register("server_middleware", async (app) => {
         let path = "/" + event.path.replace(/^source\//, "");
         let type = "other";
 
-        if (output === "css") {
-            path = path.replace(ext, ".css");
-            type = "style";
+        switch (output) {
+            case "css":
+                path = path.replace(ext, ".css");
+                type = "style";
+                break;
+            case "js":
+                type = "script";
+                break;
         }
 
         info && log.info("Reloading due to changes...");
@@ -76,8 +81,8 @@ hexo.extend.filter.register("server_middleware", async (app) => {
                     }
                 }
             }
-            
-            if ("pjax" in window) {
+
+            if ("pjax" in window && data.type === "other") {
                 pjax.loadUrl(location.href, { history: false });
             }
             else {
