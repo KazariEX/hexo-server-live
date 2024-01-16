@@ -70,44 +70,13 @@ hexo.extend.filter.register("server_middleware", async (app) => {
     hexo.source.on("processAfter", onProcessAfter);
     hexo.theme.on("processAfter", onProcessAfter);
 
-    hexo.extend.injector.register("body_end", /*HTML*/`
-    <script type="module">
-        let es = null;
-        function initES() {
-        es?.close();
-        if (es == null || es.readyState == 2) {
-            es = new EventSource("${route}");
-            es.onerror = function (e) {
-            if (es.readyState == 2) {
-                setTimeout(initES, ${retry});
-            }
-            };
-            es.addEventListener("${eventName}", (event) => {
-            const data = JSON.parse(event.data);
-
-            if (data.type === "style") {
-                const links = document.querySelectorAll("link");
-                for (const link of links) {
-                const url = new URL(link.href);
-                if (url.host === location.host && url.pathname === data.path) {
-                    const next = link.cloneNode();
-                    next.href = data.path + "?" + Math.random().toString(36).slice(2);
-                    next.onload = () => link.remove();
-                    link.parentNode.insertBefore(next, link.nextSibling);
-                    return;
-                }
-                }
-            }
-
-            if ("pjax" in window) {
-                pjax.loadUrl(location.href, { history: false });
-            }
-            else {
-                location.reload();
-            }
-            });
-        }
-        }
-        initES();
+    hexo.extend.injector.register("body_end", `<script type="module">
+        (${
+            require("./lib/inject").toString()
+        })({
+            route: "${route}",
+            eventName: "${eventName}",
+            retry: ${retry}
+        });
     </script>`);
 });
