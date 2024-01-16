@@ -1,3 +1,7 @@
+## v0.2.8 (2024-01-16)
+
+- Improvement: replace all stylesheets when the path does not match.
+
 ## v0.2.7 (2024-01-16)
 
 - Pref: capture the timing accurately using the ``generateAfter`` hook.
