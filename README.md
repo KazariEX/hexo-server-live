@@ -2,7 +2,7 @@
 
 [![NPM version](https://badge.fury.io/js/hexo-server-live.svg)](https://www.npmjs.com/package/hexo-server-live)
 
-Live reload while source file changed for [Hexo].
+Live reload when source files change for [Hexo]. Support PJAX and Hot-reloading CSS.
 
 ## Installation
 
@@ -20,7 +20,7 @@ $ hexo server
 
 ```yaml
 live_reload:
-    delay: 150
+    delay: 0
     info: true
     retry: 3000
 ```
