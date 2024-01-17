@@ -1,3 +1,7 @@
+## v0.2.9 (2024-01-17)
+
+- Improvement: handle theme config correctly.
+
 ## v0.2.8 (2024-01-16)
 
 - Improvement: replace all stylesheets when the path does not match.

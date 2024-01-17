@@ -1,6 +1,7 @@
 # hexo-server-live
 
 [![NPM version](https://badge.fury.io/js/hexo-server-live.svg)](https://www.npmjs.com/package/hexo-server-live)
+[![NPM download](https://img.shields.io/npm/dt/hexo-server-live)](https://www.npmjs.com/package/hexo-server-live)
 
 Live reload when source files change for [Hexo]. Support PJAX and Hot-reloading CSS.
 
