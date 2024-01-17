@@ -36,28 +36,12 @@ hexo.extend.filter.register("server_middleware", async (app) => {
         if (event.type === "skip") return;
         if (resCollection.size === 0) return;
 
-        const ext = extname(event.path);
-        const output = hexo.extend.renderer.getOutput(event.path);
-        let path = "/" + event.path.replace(/^source\//, "");
-        let type = "other";
-
-        switch (output) {
-            case "css":
-                path = path.replace(ext, ".css");
-                type = "style";
-                break;
-            case "js":
-                type = "script";
-                break;
-        }
+        const data = transformProcessedInfo(event.path);
 
         info && log.info("Reloading due to changes...");
-        message = 
+        message =
             `event: ${eventName}\n` +
-            `data: ${JSON.stringify({
-                path,
-                type
-            })}\n\n`;
+            `data: ${JSON.stringify(data)}\n\n`;
     }
 
     hexo.source.on("processAfter", onProcessAfter);
@@ -83,4 +67,27 @@ hexo.extend.filter.register("server_middleware", async (app) => {
             retry: ${retry}
         });
     </script>`);
+
+    function transformProcessedInfo(path) {
+        const base = basename(path);
+        const ext = extname(path);
+        let type = "other";
+
+        const config_regex = /^_(multiconfig|config(\..+)?)\.yml/;
+        if (config_regex.test(base)) {
+            type = "config";
+        }
+        else {
+            const output = hexo.extend.renderer.getOutput(path);
+            path = "/" + path.replace(/^source\//, "").replace(ext, `.${output}`);
+            type = {
+                css: "style",
+                js: "script"
+            }[output];
+        }
+        return {
+            path,
+            type
+        };
+    }
 });
