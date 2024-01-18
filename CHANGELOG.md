@@ -1,3 +1,7 @@
+## v0.2.10 (2024-01-18)
+
+- Refactor: handle source and theme box separately.
+
 ## v0.2.9 (2024-01-17)
 
 - Improvement: handle theme config correctly.
