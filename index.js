@@ -71,7 +71,7 @@ hexo.extend.filter.register("server_middleware", (app) => {
                     type = "config";
                     break;
                 }
-                else if (path.startsWith("scripts/")) {
+                else if (!path.includes("/") || path.startsWith("scripts/")) {
                     type = null;
                     break;
                 }
@@ -86,7 +86,7 @@ hexo.extend.filter.register("server_middleware", (app) => {
                 type = {
                     css: "style",
                     js: "script"
-                }[output];
+                }[output] || "other";
                 break;
             }
         }
