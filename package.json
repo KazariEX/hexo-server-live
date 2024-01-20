@@ -1,6 +1,6 @@
 {
   "name": "hexo-server-live",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "Live reload while source file changed for Hexo.",
   "main": "index",
   "keywords": [
