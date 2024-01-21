@@ -1,3 +1,7 @@
+## v0.2.12 (2024-01-21)
+
+- Improvement: add retry field on response.
+
 ## v0.2.11 (2024-01-20)
 
 - Fix: return other type in source.
