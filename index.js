@@ -25,9 +25,9 @@ hexo.extend.filter.register("server_middleware", (app) => {
 
     app.use(route, (req, res) => {
         res.writeHead(200, {
-            "access-control-allow-origin": "*",
             "content-type": "text/event-stream",
-            "cache-control": "no-cache"
+            "cache-control": "no-cache",
+            "connection": "keep-alive"
         });
         resCollection.add(res);
     });
@@ -51,8 +51,7 @@ hexo.extend.filter.register("server_middleware", (app) => {
             require("./lib/inject").toString()
         })({
             route: "${route}",
-            eventName: "${eventName}",
-            retry: ${retry}
+            eventName: "${eventName}"
         });
     </script>`);
 
@@ -94,6 +93,7 @@ hexo.extend.filter.register("server_middleware", (app) => {
         info && log.info("Reloading due to changes...");
         message =
             `event: ${eventName}\n` +
+            `retry: ${retry}\n` +
             `data: ${JSON.stringify({ path, type })}\n\n`;
     }
 });
